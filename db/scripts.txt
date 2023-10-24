@@ -1,0 +1,90 @@
+create table Posts (
+	id serial primary key,
+	name varchar(255) not null
+);
+
+create table Users (
+	id serial primary key,
+	firstName varchar(255) not null,
+	secondName varchar(255) not null,
+	lastName varchar(255) not null,
+	post_id int REFERENCES Posts (id),
+	login varchar(255) unique not null,
+	password varchar(255) not null
+);
+
+create table Objects (
+	id serial primary key,
+	name varchar(255) not null,
+	latitude varchar(255) not null,
+	longitude varchar(255) not null,
+	description varchar(255)
+);
+
+create table TypeOfViolations (
+	id serial primary key,
+	name varchar(255) not null,
+	description varchar(255)
+);
+
+create table ReportViolations (
+	id serial primary key,
+	user_id int references Users(id),
+	violations_id int references TypeOfViolations(id),
+	image varchar(255)
+);
+
+create table Report (
+	id serial primary key,
+	user_id int references Users(id),
+	rep_vio_id int references ReportViolations(id),
+	object_id int references Objects(id)
+);
+
+insert into posts (name)
+values
+('Рабочий'),
+('Оператор');
+
+insert into users (firstname, secondname, lastname, post_id, login, password)
+values
+('Петров', 'Даниил', 'Иванович', 1,'login1', 'password1'),
+('Сергеев', 'Владислав', 'Петрович', 1,'login2', 'password2'),
+('Иванов', 'Петр', 'Владимирович', 2,'login3', 'password3'),
+('Семенов', 'Никита', 'Александрович', 1,'login4', 'password4'),
+('Абдылбеков', 'Тигран', 'Артурович', 1,'login5', 'password5');
+
+insert into objects (name, latitude, longitude)
+values
+('Объект 1', '54.900333', '52.275421'),
+('Объект 2', '54.904679', '52.312377'),
+('Объект 3', '54.903434', '52.250762'),
+('Объект 4', '54.910435', '52.258074'),
+('Объект 5', '54.907282', '52.274163');
+
+insert into TypeOfViolations (name)
+values
+('Нарушение 1'),
+('Нарушение 2'),
+('Нарушение 3'),
+('Нарушение 4'),
+('Нарушение 5');
+
+insert into ReportViolations (user_id, violations_id, image)
+values
+(1, 1, 'https://cdn.culture.ru/images/768e0a00-44de-580e-acdf-ff49090f38a7'),
+(2, 2, 'https://images.fooby.ru/1/91/25/4512111'),
+(4, 4, 'https://eddesignmag.com/wp-content/uploads/2021/11/dji_0161-scaled.jpg'),
+(5, 5, 'https://sun9-12.userapi.com/impg/5XONogl9IHt3-JoNk9JsexM483u_NPURFn_PLA/9BOOhhYEhuc.jpg?size=604x604&quality=96&sign=74f0f0f8af6445c09e52d5524fa06fa7&c_uniq_tag=xSE8kAzgqUnM2eK4Dd2IGoHR_HsaAM1dncfAeeEtYPo&type=album');
+
+
+insert into report (user_id, rep_vio_id, object_id)
+values
+(1, 1, 1),
+(2, 2, 2),
+(4, 3, 5),
+(5, 4, 5);
+
+
+
+

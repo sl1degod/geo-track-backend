@@ -3,11 +3,11 @@ const usersRouter = require('./routes/users');
 const objectsRouter = require('./routes/objects')
 const reportsRouter = require('./routes/reports')
 const violationsRouter = require('./routes/violations')
+const bodyParser = require('body-parser')
 const PORT = 5000;
-
 const app = express();
 
-// app.use(express.json);
+app.use(express.json());
 app.use('/', usersRouter);
 app.use('/', objectsRouter);
 app.use('/', reportsRouter);
