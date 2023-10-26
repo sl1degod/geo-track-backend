@@ -3,8 +3,7 @@ const database = require('../db/database')
 class ReportController {
 
     async getAllReports(req, res) {
-
-        const report = await database.query(`select concat(users.firstname, ' ', secondname, ' ', lastname) as FIO, typeofviolations.name, reportviolations.image from users, report, typeofviolations, reportviolations where report.user_id = users.id and typeofviolations.id = reportviolations.violations_id and reportviolations.id = report.rep_vio_id`)
+        const report = await database.query(`select report.id as id, concat(users.firstname, ' ', LEFT(users.secondname, 1), '. ', LEFT(users.lastname, 1), '.') as FIO, typeofviolations.name as violations, objects.name as objects, objects.latitude as latitude, objects.longitude as longitude, reportviolations.image as violations_image from users, report, typeofviolations, reportviolations, objects where report.user_id = users.id and typeofviolations.id = reportviolations.violations_id and reportviolations.id = report.rep_vio_id and objects.id = report.object_id`)
         res.json(report.rows)
     }
 
