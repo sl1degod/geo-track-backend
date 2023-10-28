@@ -18,6 +18,7 @@ create table Objects (
 	name varchar(255) not null,
 	latitude varchar(255) not null,
 	longitude varchar(255) not null,
+	image varchar(255),
 	description varchar(255)
 );
 
@@ -54,13 +55,13 @@ values
 ('Семенов', 'Никита', 'Александрович', 1,'login4', 'password4'),
 ('Абдылбеков', 'Тигран', 'Артурович', 1,'login5', 'password5');
 
-insert into objects (name, latitude, longitude)
+insert into objects (name, latitude, longitude, image)
 values
-('Объект 1', '54.900333', '52.275421'),
-('Объект 2', '54.904679', '52.312377'),
-('Объект 3', '54.903434', '52.250762'),
-('Объект 4', '54.910435', '52.258074'),
-('Объект 5', '54.907282', '52.274163');
+('Объект 1', '54.900333', '52.275421', 'https://cdn.culture.ru/images/768e0a00-44de-580e-acdf-ff49090f38a7'),
+('Объект 2', '54.904679', '52.312377', 'https://images.fooby.ru/1/91/25/4512111'),
+('Объект 3', '54.903434', '52.250762', 'https://eddesignmag.com/wp-content/uploads/2021/11/dji_0161-scaled.jpg'),
+('Объект 4', '54.910435', '52.258074', 'https://sun9-12.userapi.com/impg/5XONogl9IHt3-JoNk9JsexM483u_NPURFn_PLA/9BOOhhYEhuc.jpg?size=604x604&quality=96&sign=74f0f0f8af6445c09e52d5524fa06fa7&c_uniq_tag=xSE8kAzgqUnM2eK4Dd2IGoHR_HsaAM1dncfAeeEtYPo&type=album'),
+('Объект 5', '54.907282', '52.274163', 'https://images.fooby.ru/1/91/25/4512111');
 
 insert into TypeOfViolations (name)
 values
