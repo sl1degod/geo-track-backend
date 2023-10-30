@@ -8,6 +8,7 @@ create table Users (
 	firstName varchar(255) not null,
 	secondName varchar(255) not null,
 	lastName varchar(255) not null,
+	image varchar(255),
 	post_id int REFERENCES Posts (id),
 	login varchar(255) unique not null,
 	password varchar(255) not null
@@ -47,13 +48,13 @@ values
 ('Рабочий'),
 ('Оператор');
 
-insert into users (firstname, secondname, lastname, post_id, login, password)
+insert into users (firstname, secondname, lastname, image, post_id, login, password)
 values
-('Петров', 'Даниил', 'Иванович', 1,'login1', 'password1'),
-('Сергеев', 'Владислав', 'Петрович', 1,'login2', 'password2'),
-('Иванов', 'Петр', 'Владимирович', 2,'login3', 'password3'),
-('Семенов', 'Никита', 'Александрович', 1,'login4', 'password4'),
-('Абдылбеков', 'Тигран', 'Артурович', 1,'login5', 'password5');
+('Петров', 'Даниил', 'Иванович', 'https://pechater.ru/wp-content/uploads/2019/04/Foto-na-dokumenty-ot-pechaterfoto-3.jpg', 1,'login1', 'password1'),
+('Сергеев', 'Владислав', 'Петрович', 'https://static.tildacdn.com/tild3233-3833-4139-a566-636538383433/IMG_08631-40.jpg', 1,'login2', 'password2'),
+('Иванов', 'Петр', 'Владимирович', 'https://pechater.ru/wp-content/uploads/2019/08/foto-ot-pechaterfoto-krasivo.jpg', 2, 'login3', 'password3'),
+('Семенов', 'Никита', 'Александрович', 'https://visatimes.ru/wp-content/uploads/2018/12/fotografii-na-pasport.jpg', 1,'login4', 'password4'),
+('Абдылбеков', 'Тигран', 'Артурович', 'https://fotobam.ru/gallery/VF1A8286.jpg', 1,'login5', 'password5');
 
 insert into objects (name, latitude, longitude, image)
 values

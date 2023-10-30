@@ -3,13 +3,13 @@ const database = require('../db/database')
 class UsersController {
 
     async getUsers(req, res) {
-        const users = await database.query('select users.firstname, users.secondname, users.lastname, posts.name, users.login, users.password from users, posts where users.post_id = posts.id order by users.id')
+        const users = await database.query('select users.id, users.firstname, users.secondname, users.lastname, users.image, posts.name as post, users.login, users.password from users, posts where users.post_id = posts.id order by users.id')
         res.json(users.rows)
     }
 
     async getUser(req, res) {
         const id = req.params.id
-        const user = await database.query('select users.firstname, users.secondname, users.lastname, posts.name, users.login, users.password from users, posts where users.post_id = posts.id and users.id = $1', [id])
+        const user = await database.query('select users.firstname, users.secondname, users.lastname, users.image, posts.name as post, users.login, users.password from users, posts where users.post_id = posts.id and users.id = $1', [id])
         res.json(user.rows[0])
     }
 
