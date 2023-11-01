@@ -1,5 +1,6 @@
 const db = require('../db/database')
 const database = require("../db/database");
+const stream = require('../Stream')
 
 class ObjectsController {
 
@@ -12,6 +13,12 @@ class ObjectsController {
         const id = req.params.id
         const objects = await database.query('select * from objects where id = $1', [id])
         res.json(objects.rows[0])
+    }
+
+    async getImage(req, res) {
+        const id = req.params.id
+        const user = await database.query('select users.firstname, users.secondname, users.lastname, users.uuid_image, posts.name as post, users.login, users.password from users, posts where users.post_id = posts.id and users.id = $1', [id])
+        stream.objectsReadStream(req, res, id)
     }
 
     async createObject(req, res) {

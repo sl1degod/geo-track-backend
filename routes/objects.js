@@ -4,6 +4,7 @@ const router = new Router();
 
 router.get('/objects', objectsController.getAllObjects);
 router.get('/objects/:id', objectsController.getObjects);
+router.get('/objects/image/:id', objectsController.getImage);
 router.post('/objects', objectsController.createObject);
 router.patch('/objects/:id', objectsController.updateObjects);
 

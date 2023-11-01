@@ -8,7 +8,7 @@ create table Users (
 	firstName varchar(255) not null,
 	secondName varchar(255) not null,
 	lastName varchar(255) not null,
-	image varchar(255),
+	uuid_image int not null,
 	post_id int REFERENCES Posts (id),
 	login varchar(255) unique not null,
 	password varchar(255) not null
@@ -19,7 +19,7 @@ create table Objects (
 	name varchar(255) not null,
 	latitude varchar(255) not null,
 	longitude varchar(255) not null,
-	image varchar(255),
+	uuid_image int not null,
 	description varchar(255)
 );
 
@@ -48,21 +48,21 @@ values
 ('Рабочий'),
 ('Оператор');
 
-insert into users (firstname, secondname, lastname, image, post_id, login, password)
+insert into users (firstname, secondname, lastname, uuid_image, post_id, login, password)
 values
-('Петров', 'Даниил', 'Иванович', 'https://pechater.ru/wp-content/uploads/2019/04/Foto-na-dokumenty-ot-pechaterfoto-3.jpg', 1,'login1', 'password1'),
-('Сергеев', 'Владислав', 'Петрович', 'https://static.tildacdn.com/tild3233-3833-4139-a566-636538383433/IMG_08631-40.jpg', 1,'login2', 'password2'),
-('Иванов', 'Петр', 'Владимирович', 'https://pechater.ru/wp-content/uploads/2019/08/foto-ot-pechaterfoto-krasivo.jpg', 2, 'login3', 'password3'),
-('Семенов', 'Никита', 'Александрович', 'https://visatimes.ru/wp-content/uploads/2018/12/fotografii-na-pasport.jpg', 1,'login4', 'password4'),
-('Абдылбеков', 'Тигран', 'Артурович', 'https://fotobam.ru/gallery/VF1A8286.jpg', 1,'login5', 'password5');
+('Петров', 'Даниил', 'Иванович', 1, 1,'login1', 'password1'),
+('Сергеев', 'Владислав', 'Петрович', 2, 1,'login2', 'password2'),
+('Иванов', 'Петр', 'Владимирович', 3, 2, 'login3', 'password3'),
+('Семенов', 'Никита', 'Александрович', 4, 1,'login4', 'password4'),
+('Абдылбеков', 'Тигран', 'Артурович', 5, 1,'login5', 'password5');
 
-insert into objects (name, latitude, longitude, image)
+insert into objects (name, latitude, longitude, uuid_image)
 values
-('Объект 1', '54.900333', '52.275421', 'https://cdn.culture.ru/images/768e0a00-44de-580e-acdf-ff49090f38a7'),
-('Объект 2', '54.904679', '52.312377', 'https://images.fooby.ru/1/91/25/4512111'),
-('Объект 3', '54.903434', '52.250762', 'https://eddesignmag.com/wp-content/uploads/2021/11/dji_0161-scaled.jpg'),
-('Объект 4', '54.910435', '52.258074', 'https://sun9-12.userapi.com/impg/5XONogl9IHt3-JoNk9JsexM483u_NPURFn_PLA/9BOOhhYEhuc.jpg?size=604x604&quality=96&sign=74f0f0f8af6445c09e52d5524fa06fa7&c_uniq_tag=xSE8kAzgqUnM2eK4Dd2IGoHR_HsaAM1dncfAeeEtYPo&type=album'),
-('Объект 5', '54.907282', '52.274163', 'https://images.fooby.ru/1/91/25/4512111');
+('Объект 1', '54.900333', '52.275421', 1),
+('Объект 2', '54.904679', '52.312377', 2),
+('Объект 3', '54.903434', '52.250762', 3),
+('Объект 4', '54.910435', '52.258074', 2),
+('Объект 5', '54.907282', '52.274163', 4);
 
 insert into TypeOfViolations (name)
 values
@@ -86,7 +86,3 @@ values
 (2, 2, 2),
 (4, 3, 5),
 (5, 4, 5);
-
-
-
-
