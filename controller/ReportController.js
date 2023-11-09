@@ -1,5 +1,6 @@
 const database = require('../db/database')
 
+
 class ReportController {
 
     async getAllReports(req, res) {
@@ -14,10 +15,12 @@ class ReportController {
     }
 
     async createReportsVio(req, res) {
-        const {user_id, violations_id, image} = req.body;
+        const {user_id, violations_id} = req.body;
+        const imageName = req.file.originalname;
+        const image = req.file;
 
         try {
-            const newReportVio = await database.query(`insert into ReportViolations(user_id, violations_id, image) values($1, $2, $3) RETURNING *`, [user_id, violations_id, image])
+            const newReportVio = await database.query(`insert into ReportViolations(user_id, violations_id, image) values($1, $2, $3) RETURNING *`, [user_id, violations_id, imageName])
             res.json(newReportVio.rows[0])
         } catch (error) {
             res.json({
@@ -41,10 +44,6 @@ class ReportController {
     }
 
 
-
-    async updateReports(req, res) {
-
-    }
 }
 
 module.exports = new ReportController()
