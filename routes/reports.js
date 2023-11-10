@@ -2,7 +2,15 @@ const Router = require('express')
 const reportsController = require('../controller/ReportController')
 const router = new Router();
 const multer = require('multer');
-const upload = multer({ dest: 'image/' });
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'image/');
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname);
+    }
+});
+const upload = multer({ storage: storage });
 
 router.get('/reports', reportsController.getAllReports);
 router.get('/reports/:id', reportsController.getReports);

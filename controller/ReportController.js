@@ -17,7 +17,7 @@ class ReportController {
     async createReportsVio(req, res) {
         const {user_id, violations_id} = req.body;
         const imageName = req.file.originalname;
-        const image = req.file;
+        const image = req.file.originalname;
 
         try {
             const newReportVio = await database.query(`insert into ReportViolations(user_id, violations_id, image) values($1, $2, $3) RETURNING *`, [user_id, violations_id, imageName])
