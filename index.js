@@ -7,6 +7,7 @@ const PORT = 5000;
 const app = express();
 
 app.use(express.json());
+app.use('/static', express.static('image/reports/'))
 app.use('/', usersRouter);
 app.use('/', objectsRouter);
 app.use('/', reportsRouter);

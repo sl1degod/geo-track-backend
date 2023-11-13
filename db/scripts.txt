@@ -74,10 +74,10 @@ values
 
 insert into ReportViolations (user_id, violations_id, image)
 values
-(1, 1, 'https://cdn.culture.ru/images/768e0a00-44de-580e-acdf-ff49090f38a7'),
-(2, 2, 'https://images.fooby.ru/1/91/25/4512111'),
-(4, 4, 'https://eddesignmag.com/wp-content/uploads/2021/11/dji_0161-scaled.jpg'),
-(5, 5, 'https://sun9-12.userapi.com/impg/5XONogl9IHt3-JoNk9JsexM483u_NPURFn_PLA/9BOOhhYEhuc.jpg?size=604x604&quality=96&sign=74f0f0f8af6445c09e52d5524fa06fa7&c_uniq_tag=xSE8kAzgqUnM2eK4Dd2IGoHR_HsaAM1dncfAeeEtYPo&type=album');
+(1, 1, '1.jpg'),
+(2, 2, '2.jpg'),
+(4, 4, '3.jpg'),
+(5, 5, '4.jpg');
 
 
 insert into report (user_id, rep_vio_id, object_id)

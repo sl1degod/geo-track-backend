@@ -4,7 +4,7 @@ const router = new Router();
 const multer = require('multer');
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'image/');
+        cb(null, 'image/reports');
     },
     filename: function (req, file, cb) {
         cb(null, file.originalname);
