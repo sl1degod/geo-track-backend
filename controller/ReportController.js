@@ -17,14 +17,13 @@ class ReportController {
     async createReportsVio(req, res) {
         const {user_id, violations_id} = req.body;
         const imageName = req.file.originalname;
-        const image = req.file.originalname;
-
+        console.log(user_id + violations_id)
         try {
             const newReportVio = await database.query(`insert into ReportViolations(user_id, violations_id, image) values($1, $2, $3) RETURNING *`, [user_id, violations_id, imageName])
             res.json(newReportVio.rows[0])
         } catch (error) {
             res.json({
-                message: "Во время создания плейлиста произошла ошибка"
+                message: "Во время создания произошла ошибка"
             })
         }
     }
