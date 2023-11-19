@@ -7,7 +7,8 @@ const PORT = 5000;
 const app = express();
 
 app.use(express.json());
-app.use('/static', express.static('image/reports/'))
+app.use('/static/reports', express.static('image/reports/'))
+app.use('/static/objects', express.static('image/objects/'))
 app.use('/', usersRouter);
 app.use('/', objectsRouter);
 app.use('/', reportsRouter);

@@ -5,7 +5,7 @@ const stream = require('../Stream')
 class ObjectsController {
 
     async getAllObjects(req, res) {
-        const objects = await database.query('select * from objects')
+        const objects = await database.query('select objects.id, objects.name, objects.latitude, objects.longitude, objects.uuid_image, count(report.object_id) as count from objects join report on objects.id = report.object_id group by objects.id')
         res.json(objects.rows)
     }
 
