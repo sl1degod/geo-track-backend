@@ -4,13 +4,13 @@ const fs = require('fs');
 class ReportController {
 
     async getAllReports(req, res) {
-        const report = await database.query(`select report.id as id, concat(users.firstname, ' ', LEFT(users.secondname, 1), '. ', LEFT(users.lastname, 1), '.') as FIO, typeofviolations.name as violations, objects.name as objects, objects.latitude as latitude, objects.longitude as longitude, reportviolations.image as violations_image from users, report, typeofviolations, reportviolations, objects where report.user_id = users.id and typeofviolations.id = reportviolations.violations_id and reportviolations.id = report.rep_vio_id and objects.id = report.object_id`)
+        const report = await database.query(`select report.id as id, concat(users.firstname, ' ', LEFT(users.secondname, 1), '. ', LEFT(users.lastname, 1), '.') as FIO, typeofviolations.name as violations, objects.name as objects, objects.latitude as latitude, objects.longitude as longitude, reportviolations.image as violations_image, report.date_report as date, report.time_report as time from users, report, typeofviolations, reportviolations, objects where report.user_id = users.id and typeofviolations.id = reportviolations.violations_id and reportviolations.id = report.rep_vio_id and objects.id = report.object_id`)
         res.json(report.rows)
     }
 
     async getReports(req, res) {
         const id = req.params.id
-        const report = await database.query(`select concat(users.firstname, \' \', users.secondname, \' \', users.lastname) as FIO, typeofviolations.name, reportviolations.image from users, report, typeofviolations, reportviolations where report.id = $1 and report.user_id = users.id and typeofviolations.id = reportviolations.violations_id and reportviolations.id = report.rep_vio_id`, [id])
+        const report = await database.query(`select concat(users.firstname, \' \', users.secondname, \' \', users.lastname) as FIO, typeofviolations.name, reportviolations.image, report.date_report as date, report.time_report as time from users, report, typeofviolations, reportviolations where report.id = $1 and report.user_id = users.id and typeofviolations.id = reportviolations.violations_id and reportviolations.id = report.rep_vio_id`, [id])
         res.json(report.rows[0])
     }
 
@@ -32,7 +32,7 @@ class ReportController {
         const {user_id, rep_vio_id, object_id} = req.body;
 
         try {
-            const report = await database.query(`insert into report(user_id, rep_vio_id, object_id) values($1, $2, $3) RETURNING *`, [user_id, rep_vio_id, object_id])
+            const report = await database.query(`insert into report(user_id, rep_vio_id, object_id, date_report, time_report) values($1, $2, $3, current_date, current_time) RETURNING *`, [user_id, rep_vio_id, object_id])
             res.json(report.rows[0])
 
         } catch (error) {

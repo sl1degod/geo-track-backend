@@ -40,7 +40,9 @@ create table Report (
 	id serial primary key,
 	user_id int references Users(id),
 	rep_vio_id int references ReportViolations(id),
-	object_id int references Objects(id)
+	object_id int references Objects(id),
+	date_report date not null,
+	time_report time not null
 );
 
 insert into posts (name)
@@ -80,9 +82,9 @@ values
 (5, 5, '4.jpg');
 
 
-insert into report (user_id, rep_vio_id, object_id)
+insert into report (user_id, rep_vio_id, object_id, date_report, time_report)
 values
-(1, 1, 1),
-(2, 2, 2),
-(4, 3, 5),
-(5, 4, 5);
+(1, 1, 1, current_date, current_time),
+(2, 2, 2, current_date, current_time),
+(4, 3, 5, current_date, current_time),
+(5, 4, 5, current_date, current_time);
