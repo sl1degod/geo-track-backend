@@ -5,7 +5,8 @@ const reportsRouter = require('./routes/reports')
 const violationsRouter = require('./routes/violations')
 const PORT = 5000;
 const app = express();
-
+process.env.TZ = 'Europe/Moscow';
+const date = new Date().toLocaleString("en-US", {timeZone: "Europe/Moscow"});
 app.use(express.json());
 app.use('/static/reports', express.static('image/reports/'))
 app.use('/static/objects', express.static('image/objects/'))
