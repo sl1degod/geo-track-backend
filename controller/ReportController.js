@@ -2,8 +2,9 @@ const database = require('../db/database')
 const moment = require('moment')
 class ReportController {
 
-    async getAllReports(req, res) {
-        const report = await database.query(`select report.id as id, concat(users.firstname, ' ', LEFT(users.secondname, 1), '. ', LEFT(users.lastname, 1), '.') as FIO, typeofviolations.name as violations, objects.name as object, objects.latitude as latitude, objects.longitude as longitude, reportviolations.image as violations_image, report.date_report as date, report.time_report as time from users, report, typeofviolations, reportviolations, objects where report.user_id = users.id and typeofviolations.id = reportviolations.violations_id and reportviolations.id = report.rep_vio_id and objects.id = report.object_id order by report.id desc`)
+    async getAdminReports(req, res) {
+        const id = req.params.id
+        const report = await database.query(`SELECT report.id as id, concat(users.firstname, ' ', LEFT(users.secondname, 1), '. ', LEFT(users.lastname, 1), '.') as FIO, typeofviolations.name as violations, objects.name as object, objects.latitude as latitude, objects.longitude as longitude, reportviolations.image as violations_image,  report.date_report as date, report.time_report as time FROM users, report, typeofviolations, reportviolations, objects WHERE report.user_id = users.id AND typeofviolations.id = reportviolations.violations_id AND reportviolations.id = report.rep_vio_id AND objects.id = report.object_id AND report.user_id = users.id AND report.user_id = $1 ORDER BY report.id DESC`, [id])
         const formattedReports = report.rows.map((row) => {
             const formattedDate = moment(row.date).format('YYYY-MM-DD');
             return {
@@ -14,10 +15,16 @@ class ReportController {
         res.json(formattedReports);
     }
 
-    async getReports(req, res) {
-        const id = req.params.id
-        const report = await database.query(`select concat(users.firstname, \' \', users.secondname, \' \', users.lastname) as FIO, typeofviolations.name, reportviolations.image, report.date_report as date, report.time_report as time from users, report, typeofviolations, reportviolations where report.id = $1 and report.user_id = users.id and typeofviolations.id = reportviolations.violations_id and reportviolations.id = report.rep_vio_id`, [id])
-        res.json(report.rows[0])
+    async getAllReports(req, res) {
+        const report = await database.query(`SELECT report.id as id, concat(users.firstname, ' ', LEFT(users.secondname, 1), '. ', LEFT(users.lastname, 1), '.') as FIO, typeofviolations.name as violations, objects.name as object, objects.latitude as latitude, objects.longitude as longitude, reportviolations.image as violations_image,  report.date_report as date, report.time_report as time FROM users, report, typeofviolations, reportviolations, objects WHERE report.user_id = users.id AND typeofviolations.id = reportviolations.violations_id AND reportviolations.id = report.rep_vio_id AND objects.id = report.object_id AND report.user_id = objects.id ORDER BY report.id DESC`)
+        const formattedReports = report.rows.map((row) => {
+            const formattedDate = moment(row.date).format('YYYY-MM-DD');
+            return {
+                ...row,
+                date: formattedDate
+            };
+        });
+        res.json(formattedReports);
 
     }
 

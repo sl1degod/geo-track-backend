@@ -5,7 +5,7 @@ const stream = require('../Stream')
 class ObjectsController {
 
     async getAllObjects(req, res) {
-        const objects = await database.query('SELECT objects.id, objects.name, objects.latitude, objects.longitude, objects.uuid_image, count (report.object_id) as count FROM objects LEFT JOIN report ON objects.id = report.object_id GROUP BY objects.id, objects.name, objects.latitude, objects.longitude, objects.uuid_image order by objects.id asc')
+        const objects = await database.query('SELECT objects.id, objects.name, objects.latitude, objects.longitude, objects.uuid_image, concat(users.firstname, \' \', LEFT(users.secondname, 1), \'. \', LEFT(users.lastname, 1), \'.\') as FIO, count (report.object_id) as count FROM objects LEFT JOIN report ON objects.id = report.object_id LEFT JOIN users ON objects.admin = users.id GROUP BY objects.id, objects.name, objects.latitude, objects.longitude, objects.uuid_image, fio order by objects.id asc')
         res.json(objects.rows)
     }
 

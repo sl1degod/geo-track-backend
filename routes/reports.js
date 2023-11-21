@@ -12,8 +12,8 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+router.get('/reports/:id', reportsController.getAdminReports);
 router.get('/reports', reportsController.getAllReports);
-router.get('/reports/:id', reportsController.getReports);
 router.post('/reportsvio', upload.single('image'), reportsController.createReportsVio);
 router.post('/reports', reportsController.createReports);
 // router.patch('/reports/:id', reportsController.updateReports);
