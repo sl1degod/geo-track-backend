@@ -20,7 +20,7 @@ class ViolationsController {
                                             left join reportviolations on reportviolations.id = report.rep_vio_id 
                                             left join typeofviolations on typeofviolations.id = reportviolations.violations_id 
                                             group by date, report.object_id, violation, typeofviolations.id
-                                            order by violation asc, report.date_report asc`)
+                                            order by report.date_report asc`)
         const formattedVio= vio.rows.map((row) => {
             const formattedDate = moment(row.date).format('YYYY-MM-DD');
             return {
