@@ -4,7 +4,7 @@ const pool = new Pool({
     password: '123',
     host: "localhost",
     port: 5432,
-    database: "kursovaya"
+    database: "geo_track"
 });
 
-module.exports = pool;
+module.exports = pool;   
