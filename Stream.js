@@ -1,7 +1,5 @@
 const fs = require("fs");
 class Stream {
-
-
     usersReadStream(req, res, id) {
         try {
             res.writeHead(200, {'Content-Type': 'image/jpeg'})

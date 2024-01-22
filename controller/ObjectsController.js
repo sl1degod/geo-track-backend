@@ -22,16 +22,17 @@ class ObjectsController {
     }
 
     async createObject(req, res) {
-        let {name, latitude, longitude, uuid_image, admin} = req.body;
+        const {name, latitude, longitude, admin} = req.body;
+        const imageName = req.file.originalname;
         try {
-            const newUser = await database.query(`insert into objects (name, latitude, longitude, uuid_image, admin) values($1, $2, $3, 2, $4) RETURNING *`, [name, latitude, longitude, admin])
-            res.json(newUser.rows[0])
-
-        } catch (error) {
-            res.json({
+            const newObject = await database.query(`insert into objects (name, latitude, longitude, uuid_image, admin) values($1, $2, $3, $5, $4) RETURNING *`, [name, latitude, longitude, admin, imageName])
+            res.json(newObject.rows[0])
+        } catch (error) { 
+            res.json({  
                 message: "Во время создания объекта произошла ошибка"
             })
         }
+        console.log(imageName); 
     }
 
     async updateObjects(req, res) {

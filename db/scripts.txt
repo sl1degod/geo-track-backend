@@ -19,7 +19,7 @@ create table Objects (
 	name varchar(255) not null,
 	latitude varchar(255) not null,
 	longitude varchar(255) not null,
-	uuid_image int not null,
+	uuid_image varchar(255) not null,
 	admin int references Users(id),
 	description varchar(255)
 );
@@ -61,11 +61,11 @@ values
 
 insert into objects (name, latitude, longitude, uuid_image, admin)
 values
-('Объект 1', '54.900333', '52.275421', 1, 1),
-('Объект 2', '54.912537', '52.328433', 2, 2),
-('Объект 3', '54.897815', '52.253955', 3, 3),
-('Объект 4', '54.910403', '52.257982', 2, 4),
-('Объект 5', '54.899375', '52.273489', 4, 5);
+('Объект 1', '54.900333', '52.275421', '1.jpg', 1),
+('Объект 2', '54.912537', '52.328433', '2.jpg', 2),
+('Объект 3', '54.897815', '52.253955', '3.jpg', 3),
+('Объект 4', '54.910403', '52.257982', '2.jpg', 4),
+('Объект 5', '54.899375', '52.273489', '4.jpg', 5);
 
 insert into TypeOfViolations (name)
 values
