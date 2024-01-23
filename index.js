@@ -3,9 +3,12 @@ const usersRouter = require('./routes/users');
 const objectsRouter = require('./routes/objects')
 const reportsRouter = require('./routes/reports')
 const violationsRouter = require('./routes/violations')
-var cors = require('cors')
+const authRouter = require('./routes/auth')
+const cors = require('cors')
+
 const PORT = 5000;
 const app = express();
+
 process.env.TZ = 'Europe/Moscow';
 const date = new Date().toLocaleString("en-US", {timeZone: "Europe/Moscow"});
 app.use(express.json());
@@ -16,6 +19,7 @@ app.use('/', usersRouter);
 app.use('/', objectsRouter);
 app.use('/', reportsRouter);
 app.use('/', violationsRouter);
+app.use('/', authRouter);
 
 const start = () => {
     app.listen(PORT, () => {
