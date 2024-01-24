@@ -1,15 +1,7 @@
 const database = require('../db/database')
-const {secret} = require("../config")
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const { generateAccessToken, generateRefreshToken } = require('../config');
 
-const generateAccessToken = (id, login) => {
-    const payload = {
-        id,
-        login
-    }
-    return jwt.sign(payload, secret, {expiresIn: "24h"})
-}
 class AuthController {
     async login(req, res) {
         try {
@@ -18,7 +10,9 @@ class AuthController {
             const validPassword = bcrypt.compareSync(password, user.rows[0].password)
             console.log(password + " " + user.rows[0].password)
             const token = generateAccessToken(user.rows[0].id, user.rows[0].login)
-            return res.json({token})
+            const refreshToken = generateRefreshToken(user.rows[0].id, user.rows[0].login)
+            return res.json({token, refreshToken})
+    
         } catch (e) {
           res.json({
               message: 'Что-то пошло не так'

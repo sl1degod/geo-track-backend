@@ -1,10 +1,12 @@
 const Router = require('express')
 const violationsController = require('../controller/ViolationsController')
+const authToken = require('../authMiddleware')
+
 const router = new Router();
 
-router.get('/violations', violationsController.getAllViolations);
-router.get('/violationsChar', violationsController.getCharViolations);
-router.get('/violations/:id', violationsController.getViolations);
+router.get('/violations', authToken, violationsController.getAllViolations);
+router.get('/violationsChar', authToken, violationsController.getCharViolations);
+router.get('/violations/:id', authToken, violationsController.getViolations);
 
 module.exports = router
 

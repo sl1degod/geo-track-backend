@@ -1,5 +1,7 @@
 const Router = require('express')
 const objectsController = require('../controller/ObjectsController')
+const authToken = require('../authMiddleware')
+
 const router = new Router();
 const multer = require('multer');
 const storage = multer.diskStorage({
@@ -12,10 +14,10 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-router.get('/objects', objectsController.getAllObjects);
-router.get('/objects/:id', objectsController.getObjects);
-router.get('/objects/image/:id', objectsController.getImage);
-router.post('/objects', upload.single('uuid_image'), objectsController.createObject);
-router.patch('/objects/:id', objectsController.updateObjects);
+router.get('/objects', authToken, objectsController.getAllObjects);
+router.get('/objects/:id', authToken, objectsController.getObjects);
+router.get('/objects/image/:id', authToken, objectsController.getImage);
+router.post('/objects', authToken, upload.single('uuid_image'), objectsController.createObject);
+router.patch('/objects/:id', authToken, objectsController.updateObjects);
 
 module.exports = router 
