@@ -1,6 +1,6 @@
 const database = require('../db/database')
 const bcrypt = require('bcrypt');
-const { generateAccessToken, generateRefreshToken } = require('../config');
+const { generateAccessToken } = require('../config');
 
 class AuthController {
     async login(req, res) {
@@ -10,8 +10,7 @@ class AuthController {
             const validPassword = bcrypt.compareSync(password, user.rows[0].password)
             console.log(password + " " + user.rows[0].password)
             const token = generateAccessToken(user.rows[0].id, user.rows[0].login)
-            const refreshToken = generateRefreshToken(user.rows[0].id, user.rows[0].login)
-            return res.json({token, refreshToken})
+            return res.json({token})
     
         } catch (e) {
           res.json({

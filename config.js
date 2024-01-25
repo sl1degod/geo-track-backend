@@ -7,16 +7,8 @@ const generateAccessToken = (id, login) => {
         id,
         login
     }
-    return jwt.sign(payload, secret, {expiresIn: "1d"})
-}
-
-const generateRefreshToken = (id, login) => {
-    const payload = {
-        id,
-        login
-    }
-    return jwt.sign(payload, refreshSecret, {expiresIn: "7d"})
+    return jwt.sign(payload, secret, {expiresIn: "30m"})
 }
 
 
-module.exports = { secret, refreshSecret, generateAccessToken, generateRefreshToken };
+module.exports = { secret, refreshSecret, generateAccessToken };
