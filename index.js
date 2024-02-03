@@ -15,6 +15,7 @@ app.use(express.json());
 app.use(cors())
 app.use('/static/reports', express.static('image/reports/'))
 app.use('/static/objects', express.static('image/objects/'))
+app.use('/static/users', express.static('image/users/'))
 app.use('/', usersRouter);
 app.use('/', objectsRouter);
 app.use('/', reportsRouter);

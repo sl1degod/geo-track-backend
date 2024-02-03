@@ -10,7 +10,10 @@ class AuthController {
                 return res.status(404).json({ message: "Пользователь не найден" });
             }
             const token = generateAccessToken(user.rows[0].id, user.rows[0].login)
-            return res.json({token})
+            return res.json({
+                userId: user.rows[0].id,
+                token:token, 
+            })
         } catch (e) {
           res.json({
               message: 'Что-то пошло не так'
