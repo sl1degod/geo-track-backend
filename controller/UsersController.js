@@ -21,17 +21,18 @@ class UsersController {
     }
 
     async createUsers(req, res) {
-        let {firstname, secondname, lastname, post_id, login, password} = req.body;
-        try {
-            const newUser = await database.query(`insert into users (firstname, secondname, lastname, post_id, login, password) values($1, $2, $3, $4, $5, $6) RETURNING *`, [firstname, secondname, lastname, post_id, login, password])
+        const {firstname, secondname, lastname, post_id, login, password} = req.body;
+        const imageName = req.file.originalname;
+        // try {
+            const newUser = await database.query(`insert into users (firstname, secondname, lastname, uuid_image, post_id, login, password) values($1, $2, $3, $4, $5, $6, $7) RETURNING *`, [firstname, secondname, lastname, imageName, post_id, login, password])
             res.json(newUser.rows[0])
-
-        } catch (error) {
-            res.json({
-                message: "Во время создания пользователя произошла ошибка"
-            })
-        }
-    }
+ 
+        // } catch (error) {
+        //     res.json({
+        //         message: "Во время создания пользователя произошла ошибка"
+        //     }) 
+        // }
+    }  
 
     async updateUser(req, res) {
         const id = req.params.id

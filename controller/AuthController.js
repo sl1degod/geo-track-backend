@@ -14,12 +14,12 @@ class AuthController {
                 userId: user.rows[0].id,
                 token:token, 
             })
-        } catch (e) {
+        } catch (e) { 
           res.json({
               message: 'Что-то пошло не так'
-          })
-        }
-    } 
+          }) 
+        } 
+    }  
 }
 
 module.exports = new AuthController()
