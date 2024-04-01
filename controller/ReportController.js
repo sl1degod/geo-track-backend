@@ -57,10 +57,10 @@ class ReportController {
     }
 
     async createReports(req, res) {
-        const {user_id, rep_vio_id, object_id} = req.body;
+        const {user_id, rep_vio_id, object_id, latitude, longitude, description} = req.body;
 
         try {
-            const report = await database.query(`insert into report(user_id, rep_vio_id, object_id, date_report, time_report) values($1, $2, $3, current_date, current_time) RETURNING *`, [user_id, rep_vio_id, object_id])
+            const report = await database.query(`insert into report(user_id, rep_vio_id, object_id, date_report, time_report, latitude, longitude, description) values($1, $2, $3, current_date, current_time, $4, $5, $6) RETURNING *`, [user_id, rep_vio_id, object_id, latitude, longitude, description])
             // res.json(report.rows[0])
             const responseData = report.rows[0];
             const formattedDate = moment(responseData.date_report).format()
