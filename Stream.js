@@ -21,6 +21,7 @@ class Stream {
             })
         }
     }
+
 }
 
 module.exports = new Stream()

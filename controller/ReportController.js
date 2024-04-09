@@ -1,5 +1,7 @@
 const database = require('../db/database')
 const moment = require('moment')
+const { createReport } = require('docx-templates');
+const fs = require('fs');
 class ReportController {
 
     async getAdminReports(req, res) {
@@ -58,7 +60,6 @@ class ReportController {
 
     async createReports(req, res) {
         const {user_id, rep_vio_id, object_id, latitude, longitude, description} = req.body;
-
         try {
             const report = await database.query(`insert into report(user_id, rep_vio_id, object_id, date_report, time_report, latitude, longitude, description) values($1, $2, $3, current_date, current_time, $4, $5, $6) RETURNING *`, [user_id, rep_vio_id, object_id, latitude, longitude, description])
             // res.json(report.rows[0])
@@ -73,6 +74,41 @@ class ReportController {
         }
     }
 
+    async createActReports(req, res) {
+        const id = req.params.id
+        try {
+            const report = await database.query(`SELECT report.id as id, concat(users.firstname, ' ', LEFT(users.secondname, 1), '. ', LEFT(users.lastname, 1), '.') as FIO, typeofviolations.name as violations, objects.name as object, objects.latitude as latitude, objects.longitude as longitude, reportviolations.image as image,  report.date_report as date, report.time_report as time, report.description as description FROM users, report, typeofviolations, reportviolations, objects WHERE report.user_id = users.id AND typeofviolations.id = reportviolations.violations_id AND reportviolations.id = report.rep_vio_id AND objects.id = report.object_id AND report.object_id = objects.id and report.id = $1`, [id])
+            const responseData = report.rows[0];
+            const formattedDate = moment(responseData.date_report).format()
+            responseData.date_report = formattedDate;
+            const template = ('act.docx');
+            const output = 'generated_report.docx';
+            const reportAct = await createReport({
+                template,
+                data: {
+                    id: responseData.id,
+                    fio: responseData.fio,
+                    violations: responseData.violations,
+                    object: responseData.object,
+                    latitude: responseData.latitude,
+                    longitude: responseData.longitude,
+                    imageNumber: responseData.image,
+                    description: responseData.description
+                },
+                cmdDelimiter: ['+++', '+++'],
+            });
+
+            fs.writeFileSync(output, reportAct.toString());
+            const file = fs.readFileSync(output);
+            res.setHeader('Content-Type', 'application/docx');
+            res.setHeader('Content-Disposition', 'attachment; filename=generated_report.docx');
+            res.send(file);
+        } catch (error) {
+            res.json({
+                message: error.message
+            })
+        }
+    }
 
 }
 
