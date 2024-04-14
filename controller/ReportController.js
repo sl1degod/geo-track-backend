@@ -2,6 +2,10 @@ const database = require('../db/database')
 const moment = require('moment')
 const { createReport } = require('docx-templates');
 const fs = require('fs');
+const Docxtemplater = require('docxtemplater');
+const path = require('path');
+const JSZip = require('jszip');
+
 class ReportController {
 
     async getAdminReports(req, res) {
@@ -82,29 +86,31 @@ class ReportController {
             const formattedDate = moment(responseData.date_report).format()
             responseData.date_report = formattedDate;
             const template = ('act.docx');
-            const output = 'generated_report.docx';
-            // const reportAct = await createReport({
-            //     template,
-            //     data: {
-            //         id: responseData.id,
-            //         fio: responseData.fio,
-            //         violations: responseData.violations,
-            //         object: responseData.object,
-            //         latitude: responseData.latitude,
-            //         longitude: responseData.longitude,
-            //         imageNumber: responseData.image,
-            //         description: responseData.description
-            //     },
-            //     cmdDelimiter: ['+++', '+++'],
-            // });
-
-            return res.download('act.docx');
+            const reportAct = await createReport({
+                template,
+                data: {
+                    id: responseData.id,
+                    fio: responseData.fio,
+                    violations: responseData.violations,
+                    object: responseData.object,
+                    latitude: responseData.latitude,
+                    longitude: responseData.longitude,
+                    imageNumber: responseData.image,
+                    description: responseData.description
+                },
+                cmdDelimiter: ['+++', '+++'],
+            });
+            // Возвращаем файл как поток данных
+            res.setHeader('Content-Disposition', 'attachment; filename=act.docx');
+            res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+            return res.send(reportAct);
         } catch (error) {
             res.json({
                 message: error.message
             })
         }
     }
+
 
 }
 

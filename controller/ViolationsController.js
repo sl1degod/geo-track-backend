@@ -15,7 +15,7 @@ class ViolationsController {
     }
 
     async getCharViolations(req, res) {
-        const vio = await database.query(`select typeofviolations.id, report.date_report as date, count (report.object_id) as count, typeofviolations.name as violation 
+        const vio = await database.query(`select typeofviolations.id as typeofviolations_id, report.date_report as date, count (report.object_id) as count, typeofviolations.name as violation 
                                             from report 
                                             left join reportviolations on reportviolations.id = report.rep_vio_id 
                                             left join typeofviolations on typeofviolations.id = reportviolations.violations_id 
