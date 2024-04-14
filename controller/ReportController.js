@@ -1,10 +1,7 @@
 const database = require('../db/database')
 const moment = require('moment')
 const { createReport } = require('docx-templates');
-const fs = require('fs');
-const Docxtemplater = require('docxtemplater');
-const path = require('path');
-const JSZip = require('jszip');
+const fs = require('fs')
 
 class ReportController {
 
@@ -85,7 +82,9 @@ class ReportController {
             const responseData = report.rows[0];
             const formattedDate = moment(responseData.date_report).format()
             responseData.date_report = formattedDate;
-            const template = ('act.docx');
+            const template = fs.readFileSync('act.docx');
+            const image = fs.readFileSync('image/reports/' + responseData.image)
+            console.log(responseData.image)
             const reportAct = await createReport({
                 template,
                 data: {
@@ -96,14 +95,16 @@ class ReportController {
                     latitude: responseData.latitude,
                     longitude: responseData.longitude,
                     imageNumber: responseData.image,
-                    description: responseData.description
+                    description: responseData.description,
+                    image: image
                 },
                 cmdDelimiter: ['+++', '+++'],
             });
-            // Возвращаем файл как поток данных
-            res.setHeader('Content-Disposition', 'attachment; filename=act.docx');
+
+
             res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-            return res.send(reportAct);
+            res.end(new Buffer(reportAct, 'base64'));
+
         } catch (error) {
             res.json({
                 message: error.message
