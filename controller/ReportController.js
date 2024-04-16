@@ -2,6 +2,7 @@ const database = require('../db/database')
 const moment = require('moment')
 const { createReport } = require('docx-templates');
 const fs = require('fs')
+const {images} = require("mammoth");
 
 class ReportController {
 
@@ -83,8 +84,6 @@ class ReportController {
             const formattedDate = moment(responseData.date_report).format()
             responseData.date_report = formattedDate;
             const template = fs.readFileSync('act.docx');
-            const image = fs.readFileSync('image/reports/' + responseData.image)
-            console.log(responseData.image)
             const reportAct = await createReport({
                 template,
                 data: {
@@ -92,15 +91,15 @@ class ReportController {
                     fio: responseData.fio,
                     violations: responseData.violations,
                     object: responseData.object,
+                    reportDate: responseData.date_report.slice(0, 10),
                     latitude: responseData.latitude,
                     longitude: responseData.longitude,
                     imageNumber: responseData.image,
                     description: responseData.description,
-                    image: image
+                    image: 'image/reports/' + responseData.image
                 },
                 cmdDelimiter: ['+++', '+++'],
             });
-
 
             res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
             res.end(new Buffer(reportAct, 'base64'));
