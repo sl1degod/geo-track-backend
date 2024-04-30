@@ -17,6 +17,6 @@ router.get('/users',  authToken, userController.getUsers);
 router.get('/users/image/:id', authToken, userController.getImage);
 router.get('/users/:id', authToken, userController.getUser);
 router.post('/users', authToken, upload.single('uuid_image'), userController.createUsers);
-router.patch('/users/:id', authToken, userController.updateUser);
+router.put('/users/:id', authToken, userController.updateUser);
 
 module.exports = router

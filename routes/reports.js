@@ -19,6 +19,7 @@ router.get('/reports/:id', authToken, reportsController.getReports);
 router.get('/reports', authToken, reportsController.getAllReports);
 // router.get('/reportsAct/:id', authToken, reportsController.createActReports);
 router.get('/reportsAct/:id', reportsController.createActReports);
+router.delete('/reports/:id', authToken, reportsController.deleteReport);
 router.post('/reportsvio', authToken, upload.single('image'), reportsController.createReportsVio);
 router.post('/reports', authToken, reportsController.createReports);
 // router.patch('/reports/:id', reportsController.updateReports);

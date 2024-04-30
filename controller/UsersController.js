@@ -36,9 +36,9 @@ class UsersController {
 
     async updateUser(req, res) {
         const id = req.params.id
-        let {firstname, secondname, lastname, post_id, login, password} = req.body;
-        const user = await database.query('update users set firstname = $1, secondname = $2, lastname = $3, post_id = $4, login = $5, password = $6 where id = $7 RETURNING *', [firstname, secondname, lastname, post_id, login, password, id])
-        res.json(user.rows[0])
+        const {firstname, secondname, lastname, post_id, login, password} = req.body;
+        await database.query('update users set firstname = $1, secondname = $2, lastname = $3, post_id = $4, login = $5, password = $6 where id = $7', [firstname, secondname, lastname, post_id, login, password, id])
+        res.json("Обновление данных прошло успешно")
     }
 }
 
