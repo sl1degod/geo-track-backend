@@ -12,7 +12,8 @@ class AuthController {
             const token = generateAccessToken(user.rows[0].id, user.rows[0].login)
             return res.json({
                 userId: user.rows[0].id,
-                token:token, 
+                user_role: user.rows[0].post_id,
+                token:token,
             })
         } catch (e) { 
           res.json({

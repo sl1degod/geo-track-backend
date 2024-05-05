@@ -51,8 +51,9 @@ create table Report (
 
 insert into posts (name)
 values
-('Рабочий'),
-('Оператор');
+('Оператор'),
+('Администратор'),
+('Модератор');
 
 insert into users (firstname, secondname, lastname, uuid_image, post_id, login, password)
 values
@@ -60,7 +61,8 @@ values
 ('Сергеев', 'Владислав', 'Петрович', '2.jpg', 1,'login2', 'password2'),
 ('Иванов', 'Петр', 'Владимирович', '3.jpg', 2, 'login3', 'password3'),
 ('Семенов', 'Никита', 'Александрович', '4.jpg', 1,'login4', 'password4'),
-('Абдылбеков', 'Тигран', 'Артурович', '5.jpg', 1,'login5', 'password5');
+('Абдылбеков', 'Тигран', 'Артурович', '5.jpg', 1,'login5', 'password5'),
+('Калимуллин', 'Ильяс', 'Раилевич', '1.jpg', 3,'login6', 'password6');
 
 insert into objects (name, latitude, longitude, uuid_image, admin)
 values

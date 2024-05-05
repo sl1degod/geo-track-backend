@@ -37,9 +37,9 @@ class ObjectsController {
 
     async updateObjects(req, res) {
         const id = req.params.id
-        let {name, latitude, longitude} = req.body;
-        const user = await database.query('update users set name = $1, latitude = $2, longitude = $3 where id = $4 RETURNING *', [name, latitude, longitude, id])
-        res.json(user.rows[0])
+        const {name, latitude, longitude, admin} = req.body;
+        await database.query('update objects set name = $1, latitude = $2, longitude = $3, admin = $4 where id = $5', [name, latitude, longitude, admin, id])
+        res.json("all okey")
     }
 
 }
