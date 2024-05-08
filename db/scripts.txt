@@ -8,6 +8,7 @@ create table Users (
 	firstName varchar(255) not null,
 	secondName varchar(255) not null,
 	lastName varchar(255) not null,
+	email varchar(255) not null,
 	uuid_image varchar(255) not null,
 	post_id int REFERENCES Posts (id),
 	login varchar(255) unique not null,
@@ -46,7 +47,7 @@ create table Report (
 	time_report time not null,
 	latitude varchar(255) not null,
 	longitude varchar(255) not null,
-	description varchar(255) 
+	description varchar(255)
 );
 
 insert into posts (name)
@@ -55,14 +56,14 @@ values
 ('Администратор'),
 ('Модератор');
 
-insert into users (firstname, secondname, lastname, uuid_image, post_id, login, password)
+insert into users (firstname, secondname, lastname, email, uuid_image, post_id, login, password)
 values
-('Петров', 'Даниил', 'Иванович', '1.jpg', 1,'login1', 'password1'),
-('Сергеев', 'Владислав', 'Петрович', '2.jpg', 1,'login2', 'password2'),
-('Иванов', 'Петр', 'Владимирович', '3.jpg', 2, 'login3', 'password3'),
-('Семенов', 'Никита', 'Александрович', '4.jpg', 1,'login4', 'password4'),
-('Абдылбеков', 'Тигран', 'Артурович', '5.jpg', 1,'login5', 'password5'),
-('Калимуллин', 'Ильяс', 'Раилевич', '1.jpg', 3,'login6', 'password6');
+('Петров', 'Даниил', 'Иванович', 'sl1degod86@gmail.com', '1.jpg', 1,'login1', 'password1'),
+('Сергеев', 'Владислав', 'Петрович', 'sl1degod86@gmail.com', '2.jpg', 1,'login2', 'password2'),
+('Иванов', 'Петр', 'Владимирович', 'sl1degod86@gmail.com', '3.jpg', 2, 'login3', 'password3'),
+('Семенов', 'Никита', 'Александрович', 'sl1degod86@gmail.com', '4.jpg', 1,'login4', 'password4'),
+('Абдылбеков', 'Тигран', 'Артурович', 'sl1degod86@gmail.com', '5.jpg', 1,'login5', 'password5'),
+('Калимуллин', 'Ильяс', 'Раилевич', 'sl1degod86@gmail.com', '1.jpg', 3,'login6', 'password6');
 
 insert into objects (name, latitude, longitude, uuid_image, admin)
 values
@@ -154,5 +155,7 @@ values
 (3, 23, 5, '2023-09-18', '11:50', '54.897815', '52.253955', 'Что-то сломалось'),
 (4, 24, 5, '2023-11-18', '17:00', '54.910403', '52.257982', 'Что-то сломалось'),
 (5, 25, 5, '2023-11-18', '11:50', '54.899375', '52.273489', 'Что-то сломалось');
+
+
 
 

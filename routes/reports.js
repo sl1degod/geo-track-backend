@@ -22,6 +22,7 @@ router.get('/reportsAct/:id', reportsController.createActReports);
 router.delete('/reports/:id', authToken, reportsController.deleteReport);
 router.post('/reportsvio', authToken, upload.single('image'), reportsController.createReportsVio);
 router.post('/reports', authToken, reportsController.createReports);
+router.post('/reports/:id/sendEmail', authToken, reportsController.sendEmail);
 // router.patch('/reports/:id', reportsController.updateReports);
 
 module.exports = router

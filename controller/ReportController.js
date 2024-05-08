@@ -1,8 +1,8 @@
 const database = require('../db/database')
 const moment = require('moment')
-const { createReport } = require('docx-templates');
+const docx = require('docx-templates');
 const fs = require('fs')
-const {images} = require("mammoth");
+const nodemailer = require("nodemailer");
 
 class ReportController {
 
@@ -84,7 +84,8 @@ class ReportController {
             const formattedDate = moment(responseData.date_report).format()
             responseData.date_report = formattedDate;
             const template = fs.readFileSync('act.docx');
-            const reportAct = await createReport({
+            const image = fs.readFileSync('./image/reports/' + responseData.image);
+            const reportAct = await docx.createReport({
                 template,
                 data: {
                     id: responseData.id,
@@ -92,13 +93,20 @@ class ReportController {
                     violations: responseData.violations,
                     object: responseData.object,
                     reportDate: responseData.date_report.slice(0, 10),
-                    latitude: responseData.latitude,
-                    longitude: responseData.longitude,
+                    latitude: responseData.latitude.slice(0,6),
+                    longitude: responseData.longitude.slice(0,6),
                     imageNumber: responseData.image,
                     description: responseData.description,
-                    image: 'image/reports/' + responseData.image
+                    image: image
                 },
+                // +++IMAGE pasteImage()+++
                 cmdDelimiter: ['+++', '+++'],
+                additionalJsContext: {
+                    pasteImage: () => {
+                        const data = image;
+                        return { width: 10, height: 10, data, extension: '.jpeg' };
+                    }
+                }
             });
 
             res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
@@ -110,6 +118,81 @@ class ReportController {
             })
         }
     }
+
+    async sendEmail(req, res) {
+        const id = req.params.id
+        const {email} = req.body
+        try {
+            const report = await database.query(`SELECT report.id as id, concat(users.firstname, ' ', LEFT(users.secondname, 1), '. ', LEFT(users.lastname, 1), '.') as FIO, typeofviolations.name as violations, objects.name as object, objects.latitude as latitude, objects.longitude as longitude, reportviolations.image as image,  report.date_report as date, report.description as description FROM users, report, typeofviolations, reportviolations, objects WHERE report.user_id = users.id AND typeofviolations.id = reportviolations.violations_id AND reportviolations.id = report.rep_vio_id AND objects.id = report.object_id AND report.object_id = objects.id and report.id = $1`, [id])
+            const responseData = report.rows[0];
+            responseData.date = moment(responseData.date).format();
+            const template = fs.readFileSync('act.docx');
+            const image = fs.readFileSync('./image/reports/' + responseData.image);
+            const reportAct = await docx.createReport({
+                template,
+                data: {
+                    id: responseData.id,
+                    fio: responseData.fio,
+                    violations: responseData.violations,
+                    object: responseData.object,
+                    reportDate: responseData.date.slice(0, 10),
+                    latitude: responseData.latitude.slice(0,6),
+                    longitude: responseData.longitude.slice(0,6),
+                    imageNumber: responseData.image,
+                    description: responseData.description,
+                    image: image
+                },
+                // +++IMAGE pasteImage()+++
+                cmdDelimiter: ['+++', '+++'],
+                additionalJsContext: {
+                    pasteImage: () => {
+                        const data = image;
+                        return { width: 10, height: 10, data, extension: '.jpeg' };
+                    }
+                }
+            });
+
+            const transporter = nodemailer.createTransport({
+                host: "smtp.mail.ru",
+                port: 465,
+                secure: true,
+                auth: {
+                    user: "ilyas2701@mail.ru",
+                    pass: "LfKY5NtEtMzDvXpVhsrH",
+                },
+            });
+
+            let mailOptions = {
+                from: 'ilyas2701@mail.ru',
+                to: email,
+                subject: 'Отчет об нарушениях',
+                text: 'Пожалуйста, найдите прикрепленный отчет об нарушениях.',
+                attachments: [
+                    {
+                        filename: 'report.docx',
+                        content: reportAct
+                    }
+                ]
+            };
+
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.log('Ошибка при отправке почты:', error);
+                    res.status(500).send('Ошибка при отправке почты');
+                } else {
+                    console.log('Письмо успешно отправлено:', info.response);
+                    res.json({message: "Отчет успешно отправлен на указанный адрес."});
+                }
+            });
+
+
+        } catch (error) {
+            res.json({
+                message: error.message
+            });
+        }
+    }
+
 
     async deleteReport(req, res) {
         const id = req.params.id
