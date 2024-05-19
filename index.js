@@ -4,6 +4,7 @@ const objectsRouter = require('./routes/objects')
 const reportsRouter = require('./routes/reports')
 const violationsRouter = require('./routes/violations')
 const postsRouter = require('./routes/posts')
+const eliminationRouter = require('./routes/elimination')
 const authRouter = require('./routes/auth')
 const cors = require('cors')
 
@@ -19,6 +20,7 @@ app.use('/static/objects', express.static('image/objects/'))
 app.use('/static/users', express.static('image/users/'))
 app.use('/', usersRouter);
 app.use('/', objectsRouter);
+app.use('/', eliminationRouter);
 app.use('/', reportsRouter);
 app.use('/', violationsRouter);
 app.use('/', postsRouter)
