@@ -15,11 +15,13 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.get('/reports/admin/:id', authToken, reportsController.getAdminReports);
+router.post('/reports/admin/', authToken, reportsController.getMasterReports);
 router.get('/reports/:id', authToken, reportsController.getReports);
 router.get('/reports', authToken, reportsController.getAllReports);
 // router.get('/reportsAct/:id', authToken, reportsController.createActReports);
 router.get('/reportsAct/:id', reportsController.createActReports);
 router.delete('/reports/:id', authToken, reportsController.deleteReport);
+router.patch('/reports/:id', authToken, reportsController.changeStatusReport);
 router.post('/reportsvio', authToken, upload.single('image'), reportsController.createReportsVio);
 router.post('/reports', authToken, reportsController.createReports);
 router.post('/reports/:id/sendEmail', authToken, reportsController.sendEmail);

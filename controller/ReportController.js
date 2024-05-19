@@ -21,7 +21,7 @@ class ReportController {
 
     async getReports(req, res) {
         const id = req.params.id
-        const report = await database.query(`SELECT report.id as id, concat(users.firstname, ' ', LEFT(users.secondname, 1), '. ', LEFT(users.lastname, 1), '.') as FIO, typeofviolations.name as violations, objects.name as object, objects.latitude as latitude, objects.longitude as longitude, report.latitude as rep_latitude, report.longitude as rep_longitude, reportviolations.image as violations_image,  report.date_report as date, report.time_report as time, report.description as description FROM users, report, typeofviolations, reportviolations, objects WHERE report.user_id = users.id AND typeofviolations.id = reportviolations.violations_id AND reportviolations.id = report.rep_vio_id AND objects.id = report.object_id AND report.user_id = users.id AND report.id = $1`, [id])
+        const report = await database.query(`SELECT report.id as id, concat(users.firstname, ' ', LEFT(users.secondname, 1), '. ', LEFT(users.lastname, 1), '.') as FIO, typeofviolations.name as violations, objects.name as object, objects.latitude as latitude, objects.longitude as longitude, report.latitude as rep_latitude, report.longitude as rep_longitude, reportviolations.image as violations_image,  report.date_report as date, report.time_report as time, report.description as description, elimination.days as days, report.status as status FROM users, elimination, report, typeofviolations, reportviolations, objects WHERE report.user_id = users.id AND typeofviolations.id = reportviolations.violations_id AND reportviolations.id = report.rep_vio_id AND objects.id = report.object_id AND report.user_id = users.id AND report.id = $1 and elimination.id = reportviolations.elimination_id`, [id])
         const formattedReports = report.rows.map((row) => {
             const formattedDate = moment(row.date).format('YYYY-MM-DD');
             return {
@@ -34,7 +34,7 @@ class ReportController {
 
 
     async getAllReports(req, res) {
-        const report = await database.query(`SELECT report.id as id, concat(users.firstname, ' ', LEFT(users.secondname, 1), '. ', LEFT(users.lastname, 1), '.') as FIO, typeofviolations.name as violations, objects.name as object, objects.latitude as latitude, objects.longitude as longitude, report.latitude as rep_latitude, report.longitude as rep_longitude, reportviolations.image as violations_image,  report.date_report as date, report.time_report as time, report.description as description FROM users, report, typeofviolations, reportviolations, objects WHERE report.user_id = users.id AND typeofviolations.id = reportviolations.violations_id AND reportviolations.id = report.rep_vio_id AND objects.id = report.object_id AND report.object_id = objects.id ORDER BY report.id DESC`)
+        const report = await database.query(`SELECT report.id as id, concat(users.firstname, ' ', LEFT(users.secondname, 1), '. ', LEFT(users.lastname, 1), '.') as FIO, typeofviolations.name as violations, objects.name as object, objects.latitude as latitude, objects.longitude as longitude, report.latitude as rep_latitude, report.longitude as rep_longitude, reportviolations.image as violations_image,  report.date_report as date, report.time_report as time, report.description as description, elimination.type as type, elimination.days as days FROM users, report, typeofviolations, reportviolations, objects, elimination WHERE report.user_id = users.id AND typeofviolations.id = reportviolations.violations_id AND reportviolations.id = report.rep_vio_id AND objects.id = report.object_id AND report.object_id = objects.id and elimination.id = reportviolations.elimination_id ORDER BY report.id DESC`)
         const formattedReports = report.rows.map((row) => {
             const formattedDate = moment(row.date).format('YYYY-MM-DD');
             return {
@@ -43,15 +43,71 @@ class ReportController {
             };
         });
         res.json(formattedReports);
-
     }
 
+    async getMasterReports(req, res) {
+        const { id } = req.body; // Извлечение id из тела запроса
+        console.log("Requested user ID:", id); // Логируем ID для проверки
+
+        try {
+            const report = await database.query(`SELECT 
+            report.id as id, 
+            concat(users.firstname, ' ', LEFT(users.secondname, 1), '. ', LEFT(users.lastname, 1), '.') as FIO, 
+            typeofviolations.name as violations, 
+            objects.name as object, 
+            objects.latitude as latitude, 
+            objects.longitude as longitude, 
+            report.latitude as rep_latitude, 
+            report.longitude as rep_longitude, 
+            reportviolations.image as violations_image,  
+            report.date_report as date, 
+            report.time_report as time,  
+            report.description as description, 
+            elimination.type as type, 
+            elimination.days as days 
+        FROM 
+            users
+        JOIN 
+            report ON report.user_id = users.id
+        JOIN 
+            reportviolations ON report.rep_vio_id = reportviolations.id
+        JOIN 
+            typeofviolations ON reportviolations.violations_id = typeofviolations.id
+        JOIN 
+            objects ON report.object_id = objects.id
+        JOIN 
+            elimination ON reportviolations.elimination_id = elimination.id
+        WHERE 
+            objects.admin = $1 
+        ORDER BY 
+            report.id DESC;`, [id]);
+
+            console.log("Query result:", report.rows); // Логируем результат запроса для проверки
+
+            const formattedReports = report.rows.map((row) => {
+                const formattedDate = moment(row.date).format('YYYY-MM-DD');
+                return {
+                    ...row,
+                    date: formattedDate
+                };
+            });
+
+            res.json(formattedReports);
+
+        } catch (error) {
+            console.error("Database query error:", error); // Логируем ошибку запроса
+            res.status(500).json({ error: "Internal Server Error" });
+        }
+    }
+
+
+
     async createReportsVio(req, res) {
-        const {user_id, violations_id} = req.body;
+        const {user_id, violations_id, elimination_id} = req.body;
         const imageName = req.file.originalname;
         console.log(user_id + violations_id)
         try {
-            const newReportVio = await database.query(`insert into ReportViolations(user_id, violations_id, image) values($1, $2, $3) RETURNING *`, [user_id, violations_id, imageName])
+            const newReportVio = await database.query(`insert into ReportViolations(user_id, violations_id, elimination_id, image) values($1, $2, $3, $4) RETURNING *`, [user_id, violations_id, elimination_id, imageName])
             res.json(newReportVio.rows[0])
         } catch (error) {
             res.json({
@@ -197,6 +253,13 @@ class ReportController {
     async deleteReport(req, res) {
         const id = req.params.id
         const report = await database.query('delete from report where id = $1', [id])
+        res.json("Удаление прошло успешно");
+    }
+
+    async changeStatusReport(req, res) {
+        const id = req.params.id
+        const {status} = req.body
+        const report = await database.query('update report set status = $1 where id = $2', [status, id])
         res.json("Удаление прошло успешно");
     }
 
