@@ -15,12 +15,20 @@ class ViolationsController {
     }
 
     async getCharViolations(req, res) {
-        const vio = await database.query(`select typeofviolations.id as typeofviolations_id, report.date_report as date, count (report.object_id) as count, typeofviolations.name as violation 
-                                            from report 
-                                            left join reportviolations on reportviolations.id = report.rep_vio_id 
-                                            left join typeofviolations on typeofviolations.id = reportviolations.violations_id 
-                                            group by date, report.object_id, violation, typeofviolations.id
-                                            order by report.date_report asc`)
+        const vio = await database.query(`SELECT 
+    report.date_report AS date, 
+    COUNT(report.object_id) AS count 
+FROM 
+    report 
+LEFT JOIN 
+    reportviolations ON reportviolations.id = report.rep_vio_id 
+LEFT JOIN 
+    typeofviolations ON typeofviolations.id = reportviolations.violations_id 
+GROUP BY 
+    report.date_report 
+ORDER BY 
+    report.date_report ASC;
+`)
         const formattedVio= vio.rows.map((row) => {
             const formattedDate = moment(row.date).format('YYYY-MM-DD');
             return {

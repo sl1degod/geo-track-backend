@@ -212,9 +212,12 @@ class ReportController {
                 host: "smtp.mail.ru",
                 port: 465,
                 secure: true,
+                tls: {
+                    ciphers: "SSLv3",
+                },
                 auth: {
                     user: "ilyas2701@mail.ru",
-                    pass: "LfKY5NtEtMzDvXpVhsrH",
+                    pass: "LWjkGpRKqWeadLgyfzu0",
                 },
             });
 
